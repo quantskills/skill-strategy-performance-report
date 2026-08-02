@@ -1,0 +1,20 @@
+---
+description: 实盘 A 股量化策略周期性绩效报告规则（Strategy Performance Report）——四模块绩效体检并做收益对账。
+globs: ["**/*.py", "**/*.md"]
+alwaysApply: false
+---
+
+# Strategy Performance Report
+
+当用户要求为实盘策略生成日报/周报/月报/半年报/年报绩效报告时，按 QUANTSKILLS `skill-strategy-performance-report` 执行：
+
+1. 明确数据模式：有 NAV / 只有成交+持仓 / 两者皆无，选定频率与基准。
+2. 声明口径：频率、基准、无风险利率、年化（252）、区间窗口、PnL 口径。
+3. 构建/复用净值曲线：有 NAV 直接用；无则重建（现金法→满仓法）并标注来源。
+4. 收益计算 + 对账：区间/累计/年化/分桶 + 基准对比与超额曲线，日收益乘积对账（< 1e-6）。
+5. 风险指标：MDD/波动/Sharpe/Sortino/Calmar/滚动 Sharpe（样本 < 20 日降级）。
+6. 交易分析：PnL 口径（pnl 列→FIFO→降级）、胜率/盈亏比/PnL 分布/持仓天数。
+7. 持仓与换手：当前持仓、Top-N 集中度、单边换手、调仓次数。
+8. 渲染：matplotlib(Agg) → base64 PNG 内嵌自包含 HTML + Markdown + JSON，附结论与合规声明。
+
+**纪律**：对账必过（< 1e-6）；缺输入 → 对应模块降级，绝不编造净值/收益硬算；只述不荐，不构成投资建议。

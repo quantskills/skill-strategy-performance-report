@@ -1,0 +1,3 @@
+name: strategy-performance-report
+description: 实盘 A 股量化策略周期性绩效报告 skill。四模块（收益/风险/交易/持仓换手）覆盖日报/周报/月报/半年报/年报，输出自包含 HTML + Markdown + JSON 并对账。详见 SKILL.md。
+entrypoint: SKILL.md

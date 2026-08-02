@@ -1,0 +1,8 @@
+# 绩效报告脚本运行依赖（可选，仅当要跑 scripts/ 时安装）
+# python -m pip install -r scripts/requirements.txt
+pandas>=1.5
+numpy>=1.23
+# 图表运行时：ECharts 由 assets/echarts.min.js 随 skill 内嵌分发（Apache-2.0），非 pip 依赖；
+# 缺失时 HTML 自动回退 CDN 加载。报告生成无需任何图表 Python 库。
+# 可选：读取 .parquet 格式的输入
+pyarrow>=12
