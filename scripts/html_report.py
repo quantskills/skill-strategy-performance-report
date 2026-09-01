@@ -269,11 +269,14 @@ def render_html(modules, ctx, generated_at: str, charts) -> str:
         for c in charts:
             divs.append(f'<figure class="chart"><div id="chart_{c.key}" style="width:100%;height:380px"></div>'
                         f'<figcaption>{_esc(c.title)}</figcaption></figure>')
-        init = "".join(
-            f"echarts.init(document.getElementById('chart_{c.key}'), null, {{renderer:'canvas'}})"
-            f".setOption({json.dumps(c.option, ensure_ascii=False).replace('</', '<\\\\/')});\n"
-            for c in charts
-        )
+        init_lines = []
+        for c in charts:
+            option_json = json.dumps(c.option, ensure_ascii=False).replace("</", "<\\/")
+            init_lines.append(
+                f"echarts.init(document.getElementById('chart_{c.key}'), null, {{renderer:'canvas'}})"
+                f".setOption({option_json});\n"
+            )
+        init = "".join(init_lines)
         body.append(f'<section class="card" id="charts"><h2>图表</h2>{"".join(divs)}</section>')
         body.append(f"<script>\n{init}</script>")
     elif ctx.output_format in ("all", "html"):
@@ -298,10 +301,11 @@ def render_html(modules, ctx, generated_at: str, charts) -> str:
     body.append(f'<div class="compliance">{_esc(COMPLIANCE)}</div>')
 
     runtime = _runtime_script() if charts else ""
+    body_html = "\n".join(body)
     return (
         "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n"
         '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"<title>绩效报告 · {_esc(ctx.strategy_name)}</title>\n"
         f"<style>{CSS}</style>\n</head>\n<body>\n"
-        f'<div class="wrap">\n{"\n".join(body)}\n</div>\n{runtime}\n</body>\n</html>'
+        f'<div class="wrap">\n{body_html}\n</div>\n{runtime}\n</body>\n</html>'
     )
